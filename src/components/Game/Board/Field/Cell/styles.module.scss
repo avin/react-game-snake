@@ -1,0 +1,22 @@
+.cell {
+    position: absolute;
+    box-shadow: inset 0 0 2px rgba(#000, 0.2);
+    transition: background 100ms linear;
+    border-radius: 2px;
+}
+
+.blankCell {
+    background: none;
+}
+
+.snakeCell {
+    background: #333;
+}
+
+.fruitCell {
+    background: red;
+}
+
+.snakeHead{
+    transition: none !important;
+}
