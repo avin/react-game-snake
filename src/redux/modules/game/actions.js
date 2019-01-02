@@ -1,6 +1,7 @@
 import * as Immutable from 'immutable';
 import { SET_GAME_STATE, PAUSE_GAME, SET_LEVEL, SET_DIRECTION } from './actionTypes';
-import { CELL_TYPES, DIRECTION, FIELD_SIZE } from '../../../constants/game';
+import { CELL_TYPES, DIRECTION, FIELD_SIZE, FRUITS_PER_LEVEL } from '../../../constants/game';
+import { randomArrayElement } from '../../../utils/helpers';
 
 /**
  * Получить координаты для размещения фрукта
@@ -8,18 +9,28 @@ import { CELL_TYPES, DIRECTION, FIELD_SIZE } from '../../../constants/game';
  * @returns {*}
  */
 function getRandomFruitPosition(cells) {
-    // Собираем все ячейкт которые не являеются змейкой
-    const positions = [];
+    // Все сводобные клетки
+    const allPositions = [];
+    // Лучшие позиции для зазмещения
+    const bestPositions = [];
     cells.forEach((row, y) => {
         row.forEach((cellValue, x) => {
             if (cellValue === CELL_TYPES.BLANK) {
-                positions.push([y, x]);
+                allPositions.push([y, x]);
+
+                // В лучших позициях не попадают клетки у края
+                if (y > 0 && y < FIELD_SIZE - 1) {
+                    bestPositions.push([y, x]);
+                }
             }
         });
     });
 
     // Выбираем случайную позицию
-    return positions[Math.floor(Math.random() * positions.length)];
+    if (bestPositions.length) {
+        return randomArrayElement(bestPositions);
+    }
+    return randomArrayElement(allPositions);
 }
 
 /**
@@ -60,6 +71,7 @@ export function restartGame() {
         .set('score', 0)
         .set('cells', cells)
         .set('snakeCells', snakeCells)
+        .set('nextLevelCountdown', FRUITS_PER_LEVEL)
         .set('direction', DIRECTION.TOP);
 
     return {
@@ -115,6 +127,9 @@ export function gameTick() {
         }
 
         const direction = game.get('direction');
+        const score = game.get('score');
+        const level = game.get('level');
+        const nextLevelCountdown = game.get('nextLevelCountdown');
         let snakeCells = game.get('snakeCells');
         let cells = game.get('cells');
 
@@ -174,6 +189,16 @@ export function gameTick() {
             // Рисуем новый фрукт
             const fruitPosition = getRandomFruitPosition(cells);
             cells = cells.setIn(fruitPosition, CELL_TYPES.FRUIT);
+
+            // Плюсуем очки (уровень является множителем)
+            game = game.set('score', score + 10 * level);
+
+            if (nextLevelCountdown > 1) {
+                game = game.set('nextLevelCountdown', nextLevelCountdown - 1);
+            } else {
+                game = game.set('nextLevelCountdown', FRUITS_PER_LEVEL);
+                game = game.set('level', level + 1);
+            }
         } else {
             // Убираем последнюю клетку
             const endPosition = snakeCells.get(snakeCells.size - 1).toJS();

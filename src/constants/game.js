@@ -14,3 +14,5 @@ export const DIRECTION = {
     BOTTOM: 2,
     LEFT: 3,
 };
+
+export const FRUITS_PER_LEVEL = 3;

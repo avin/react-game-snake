@@ -4,7 +4,7 @@ import styles from './styles.module.scss';
 import LabelScreen from './LabelScreen/LabelScreen';
 import { Field } from './Field/Field';
 import { CELL_MARGIN_PX, CELL_SIZE_PX, DIRECTION, FIELD_SIZE } from '../../../constants/game';
-import { gameTick, setDirection } from '../../../redux/modules/game/actions';
+import { gameTick, pauseGame, restartGame, setDirection } from '../../../redux/modules/game/actions';
 
 const { key } = window;
 
@@ -16,7 +16,9 @@ export class Board extends React.Component {
             clearTimeout(this.gameTickTimeoutId);
         }
 
-        this.gameTickTimeoutId = setTimeout(this.doGameTick, 100);
+        const { level } = this.props;
+
+        this.gameTickTimeoutId = setTimeout(this.doGameTick, 150 - level * 10);
 
         if (skipTick) {
             return;
@@ -26,33 +28,47 @@ export class Board extends React.Component {
         gameTick();
     };
 
-    pauseGame = () => {
+    stopGame = () => {
         if (this.gameTickTimeoutId) {
             clearTimeout(this.gameTickTimeoutId);
         }
     };
 
-    unPauseGame = () => {
+    resumeGame = () => {
         this.doGameTick({ skipTick: true });
     };
 
-    bindKeys = () => {
-        const { setDirection } = this.props;
+    setDirection = direction => {
+        const { level, pause, setDirection } = this.props;
+        if (level !== null && !pause) {
+            setDirection(direction);
+        }
+    };
 
+    bindKeys = () => {
         key('up', () => {
-            setDirection(DIRECTION.TOP);
+            this.setDirection(DIRECTION.TOP);
         });
 
         key('right', () => {
-            setDirection(DIRECTION.RIGHT);
+            this.setDirection(DIRECTION.RIGHT);
         });
 
         key('down', () => {
-            setDirection(DIRECTION.BOTTOM);
+            this.setDirection(DIRECTION.BOTTOM);
         });
 
         key('left', () => {
-            setDirection(DIRECTION.LEFT);
+            this.setDirection(DIRECTION.LEFT);
+        });
+
+        key('space', () => {
+            const { level, restartGame, pauseGame, pause, gameOver } = this.props;
+            if (level === null || gameOver) {
+                restartGame();
+            } else {
+                pauseGame(!pause);
+            }
         });
     };
 
@@ -61,31 +77,39 @@ export class Board extends React.Component {
         key.unbind('right');
         key.unbind('bottom');
         key.unbind('left');
+        key.unbind('space');
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        // Если сменился
-        if (!prevProps.level && this.props.level) {
+        if (
+            // Если началась игра
+            (!prevProps.level && this.props.level) ||
+            // Или рестарт после гамовера
+            (prevProps.gameOver && !this.props.gameOver)
+        ) {
             this.doGameTick();
-            this.bindKeys();
         }
 
-        if (prevProps.level && !this.props.level) {
-            this.pauseGame();
-            this.unBindKeys();
+        if (!prevProps.gameOver && this.props.gameOver) {
+            this.stopGame();
         }
 
         if (!prevProps.pause && this.props.pause) {
-            this.pauseGame();
+            this.stopGame();
         }
 
         if (prevProps.pause && !this.props.pause) {
-            this.unPauseGame();
+            this.resumeGame();
         }
     }
 
+    componentDidMount() {
+        this.bindKeys();
+    }
+
     componentWillUnmount() {
-        this.pauseGame();
+        this.stopGame();
+        this.unBindKeys();
     }
 
     render() {
@@ -101,6 +125,7 @@ export class Board extends React.Component {
                 }}
             >
                 {level !== null && <Field />}
+                <LabelScreen active={level === null} label="Press SPACE to start" />
                 <LabelScreen active={pause} label="Pause" blink />
                 <LabelScreen active={gameOver} label="Game Over" />
             </div>
@@ -121,5 +146,7 @@ export default connect(
     {
         gameTick,
         setDirection,
+        restartGame,
+        pauseGame,
     },
 )(Board);

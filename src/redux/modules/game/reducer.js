@@ -10,6 +10,7 @@ const initialState = new Immutable.Map({
     lives: null,
     cells: null,
     snakeCells: null,
+    nextLevelCountdown: null,
     direction: DIRECTION.TOP,
 });
 
