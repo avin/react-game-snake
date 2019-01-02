@@ -1,14 +1,25 @@
-.bar{
+.bar {
     display: flex;
-    padding: 10px;
+    padding: 0 10px;
 
-    background-color: white;
-    border-radius: 3px;
-    margin-bottom: 10px;
+    line-height: 35px;
+    height: 35px;
+    font-size: 18px;
 
+    background-color: #E1E8ED;
+    border-bottom: 1px solid #738694;
 }
 
-.section{
-    flex-grow: 1;
-    text-align: center;
+.section {
+    text-align: left;
+}
+
+.valueContainer {
+    transition: all 100ms linear;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.valueContainerActive{
+    text-shadow: 0 0 5px rgba(#293742, 0.5);
 }

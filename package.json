@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@avinlab/react-flash-change": "^1.1.0",
         "classnames": "^2.2.6",
         "immutable": "^4.0.0-rc.12",
         "node-sass": "^4.11.0",
@@ -30,7 +31,10 @@
     },
     "lint-staged": {
         "linters": {
-            "src/**/*.{js,json,css,md}": ["prettier-eslint --write", "git add"],
+            "src/**/*.{js,json,css,md}": [
+                "prettier-eslint --write",
+                "git add"
+            ],
             "src/**/*.js": "eslint --max-warnings 0"
         },
         "concurrent": false
@@ -38,7 +42,12 @@
     "eslintConfig": {
         "extends": "react-app"
     },
-    "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"],
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
+    ],
     "devDependencies": {
         "eslint-config-airbnb-base": "^13.1.0",
         "eslint-config-prettier": "^3.3.0",

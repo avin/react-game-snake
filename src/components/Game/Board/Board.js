@@ -125,7 +125,18 @@ export class Board extends React.Component {
                 }}
             >
                 {level !== null && <Field />}
-                <LabelScreen active={level === null} label="Press SPACE to start" />
+                <LabelScreen
+                    active={level === null}
+                    label={
+                        <div>
+                            Press
+                            <br />
+                            &lt; SPACE &gt;
+                            <br />
+                            to start
+                        </div>
+                    }
+                />
                 <LabelScreen active={pause} label="Pause" blink />
                 <LabelScreen active={gameOver} label="Game Over" />
             </div>

@@ -6,7 +6,8 @@ body {
     padding: 0;
     margin: 0;
     min-height: 600px;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    //font-family: 'Orbitron', sans-serif;
+    font-family: 'Space Mono', monospace;
 }
 
 body {
@@ -21,6 +22,14 @@ body {
 
 #root {
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.filler{
+    flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;

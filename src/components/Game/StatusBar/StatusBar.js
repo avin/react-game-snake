@@ -1,6 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import FlashChange from '@avinlab/react-flash-change';
 import styles from './styles.module.scss';
+import Lives from './Lives/Lives';
+
+const StatusBarValueString = ({ value }) => (
+    <FlashChange
+        value={value}
+        className={styles.valueContainer}
+        flashClassName={styles.valueContainerActive}
+        outerElementType="span"
+    >
+        <span>{value}</span>
+    </FlashChange>
+);
 
 export class StatusBar extends React.Component {
     render() {
@@ -8,9 +21,18 @@ export class StatusBar extends React.Component {
 
         return (
             <div className={styles.bar}>
-                <div className={styles.section}>Score: {score}</div>
-                <div className={styles.section}>Lives: {lives}</div>
-                <div className={styles.section}>Level: {level}</div>
+                <div className={styles.section} style={{ marginRight: 10 }}>
+                    <Lives value={lives} max={3} />
+                </div>
+                <div className={styles.section}>
+                    Level:
+                    <StatusBarValueString value={level} />
+                </div>
+                <div className="filler" />
+                <div className={styles.section}>
+                    Score:
+                    <StatusBarValueString value={score} />
+                </div>
             </div>
         );
     }

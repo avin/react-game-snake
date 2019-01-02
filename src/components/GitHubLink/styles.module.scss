@@ -1,0 +1,15 @@
+.main {
+    color: #959da5;
+    padding-bottom: 20px;
+}
+
+.octicon {
+    fill: #e1e8ed;
+    opacity: 0.1;
+    transition: opacity 200ms linear;
+    width: 40px;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}

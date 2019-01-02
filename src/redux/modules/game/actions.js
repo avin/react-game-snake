@@ -19,7 +19,7 @@ function getRandomFruitPosition(cells) {
                 allPositions.push([y, x]);
 
                 // В лучших позициях не попадают клетки у края
-                if (y > 0 && y < FIELD_SIZE - 1) {
+                if (y > 0 && y < FIELD_SIZE - 1 && x > 0 && x < FIELD_SIZE - 1) {
                     bestPositions.push([y, x]);
                 }
             }
@@ -121,8 +121,9 @@ export function gameTick() {
         let { game } = getState();
 
         const gameOver = game.get('gameOver');
+        const pause = game.get('pause');
 
-        if (gameOver) {
+        if (gameOver || pause) {
             return;
         }
 
@@ -166,6 +167,7 @@ export function gameTick() {
                 game = game
                     .set('snakeCells', snakeCells)
                     .set('cells', cells)
+                    .set('direction', DIRECTION.TOP)
                     .set('lives', lives - 1);
             } else {
                 // Game Over!
@@ -190,8 +192,8 @@ export function gameTick() {
             const fruitPosition = getRandomFruitPosition(cells);
             cells = cells.setIn(fruitPosition, CELL_TYPES.FRUIT);
 
-            // Плюсуем очки (уровень является множителем)
-            game = game.set('score', score + 10 * level);
+            // Плюсуем очки
+            game = game.set('score', score + 10);
 
             if (nextLevelCountdown > 1) {
                 game = game.set('nextLevelCountdown', nextLevelCountdown - 1);
