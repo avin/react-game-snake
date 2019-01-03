@@ -19,6 +19,14 @@ export class StatusBar extends React.Component {
     render() {
         const { score, level, lives } = this.props;
 
+        if (level === null) {
+            return (
+                <div className={styles.bar}>
+                    <div className={styles.logo}>*** The SNAKE ***</div>
+                </div>
+            );
+        }
+
         return (
             <div className={styles.bar}>
                 <div className={styles.section} style={{ marginRight: 10 }}>

@@ -173,7 +173,6 @@ export class Board extends React.Component {
                 <LabelScreen active={gameOver} label="Game Over" />
 
                 {showWaitCircle && <WaitCircle radius={20} />}
-                {/* <WaitCircle radius={20}/>*/}
             </div>
         );
     }
