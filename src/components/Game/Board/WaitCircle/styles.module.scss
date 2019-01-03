@@ -1,0 +1,27 @@
+.main {
+    position: absolute;
+    top: calc(50% - 20px);
+    left: calc(50% - 20px);
+    width: 40px;
+    height: 40px;
+    transform: rotateY(-180deg) rotateZ(-90deg);
+}
+
+.circle {
+    stroke-dasharray: 113px;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    stroke-width: 4px;
+    stroke: rgba(#F5F8FA, 0.8);
+    fill: none;
+    animation: countdown 1s linear infinite forwards;
+}
+
+@keyframes countdown {
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: 113px;
+    }
+}

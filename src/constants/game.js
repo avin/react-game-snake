@@ -1,4 +1,4 @@
-export const FIELD_SIZE = 20;
+export const FIELD_SIZE = 21;
 export const CELL_SIZE_PX = 20;
 export const CELL_MARGIN_PX = 1;
 
@@ -15,4 +15,4 @@ export const DIRECTION = {
     LEFT: 3,
 };
 
-export const FRUITS_PER_LEVEL = 3;
+export const FRUITS_PER_LEVEL = 5;
