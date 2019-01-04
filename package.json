@@ -14,15 +14,14 @@
         "react-redux": "^6.0.0",
         "react-scripts": "2.1.2",
         "redux": "^4.0.1",
-        "redux-thunk": "^2.3.0",
-        "reselect": "^4.0.0"
+        "redux-thunk": "^2.3.0"
     },
     "scripts": {
         "dev": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "prettier": "prettier-eslint --write \"src/**/*.{js,json,css}\"",
-        "lint": "eslint.cmd src/**/*.js"
+        "lint": "eslint src/**/*.js"
     },
     "husky": {
         "hooks": {
@@ -31,7 +30,10 @@
     },
     "lint-staged": {
         "linters": {
-            "src/**/*.{js,json,css,md}": ["prettier-eslint --write", "git add"],
+            "src/**/*.{js,json,css,md}": [
+                "prettier-eslint --write",
+                "git add"
+            ],
             "src/**/*.js": "eslint --max-warnings 0"
         },
         "concurrent": false
@@ -39,7 +41,12 @@
     "eslintConfig": {
         "extends": "react-app"
     },
-    "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"],
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
+    ],
     "homepage": ".",
     "devDependencies": {
         "eslint-config-airbnb-base": "^13.1.0",
