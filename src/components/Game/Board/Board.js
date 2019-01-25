@@ -35,7 +35,7 @@ export class Board extends React.Component {
 
         let tickTimeout = 120 - level * (5 - level / 10);
 
-        // Если нужно время на подготовку
+        // If we need time to prepare
         if (startReadiness) {
             tickTimeout = 1000;
         }
@@ -109,8 +109,9 @@ export class Board extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (
-            // Если началась игра
+            // If game beginning
             (!prevProps.level && this.props.level) ||
+            // Or restart after game over
             // Или рестарт после гамовера
             (prevProps.gameOver && !this.props.gameOver)
         ) {

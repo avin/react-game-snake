@@ -4,21 +4,21 @@ import { CELL_TYPES, DIRECTION, FIELD_SIZE, FRUITS_PER_LEVEL } from '../../../co
 import { randomArrayElement } from '../../../utils/helpers';
 
 /**
- * Получить координаты для размещения фрукта
+ * Get coordinates for apple
  * @param cells
  * @returns {*}
  */
 function getRandomFruitPosition(cells) {
-    // Все сводобные клетки
+    // All free cells
     const allPositions = [];
-    // Лучшие позиции для зазмещения
+    // Best positions for placing
     const bestPositions = [];
     cells.forEach((row, y) => {
         row.forEach((cellValue, x) => {
             if (cellValue === CELL_TYPES.BLANK) {
                 allPositions.push([y, x]);
 
-                // В лучших позициях не попадают клетки у края
+                // Don't touch borders
                 if (y > 0 && y < FIELD_SIZE - 1 && x > 0 && x < FIELD_SIZE - 1) {
                     bestPositions.push([y, x]);
                 }
@@ -26,7 +26,7 @@ function getRandomFruitPosition(cells) {
         });
     });
 
-    // Выбираем случайную позицию
+    // Get random position
     if (bestPositions.length) {
         return randomArrayElement(bestPositions);
     }
@@ -34,7 +34,7 @@ function getRandomFruitPosition(cells) {
 }
 
 /**
- * Сегерировать клетки для изначального состояния
+ * Get cells for init state
  * @returns {{cells: any, snakeCells: List}}
  */
 function getInitCellPositions() {
@@ -44,7 +44,7 @@ function getInitCellPositions() {
 
     let cells = Immutable.fromJS(Array(FIELD_SIZE).fill(Array(FIELD_SIZE).fill(CELL_TYPES.BLANK)));
 
-    // Размещаем змею
+    // Place snake
     for (let i = 0; i < 3; i += 1) {
         cells = cells.setIn([center + i, center], CELL_TYPES.SNAKE);
         snakeCells = snakeCells.push(new Immutable.List([center + i, center]));
@@ -57,7 +57,7 @@ function getInitCellPositions() {
 }
 
 /**
- * Рестартануть игру
+ * Restart game
  * @returns {{type: string}}
  */
 export function restartGame() {
@@ -81,7 +81,7 @@ export function restartGame() {
 }
 
 /**
- * Поставить на паузу
+ * Pause game
  * @param value
  * @returns {{type: string, value: *}}
  */
@@ -92,6 +92,11 @@ export function pauseGame(value) {
     };
 }
 
+/**
+ * Change level
+ * @param level
+ * @returns {{level: *, type: string}}
+ */
 export function changeLevel(level) {
     return {
         type: SET_LEVEL,
@@ -99,13 +104,19 @@ export function changeLevel(level) {
     };
 }
 
+/**
+ * Check collision
+ * @param position
+ * @param cells
+ * @returns {boolean}
+ */
 function checkCrash(position, cells) {
-    // Врезались в стенку
+    // Touch borders
     if (position[0] < 0 || position[0] > FIELD_SIZE - 1 || position[1] < 0 || position[1] > FIELD_SIZE - 1) {
         return true;
     }
 
-    // Врезались в самого себя или
+    // Touch myself
     if (cells.getIn(position) === CELL_TYPES.SNAKE) {
         return true;
     }
@@ -114,7 +125,7 @@ function checkCrash(position, cells) {
 }
 
 /**
- * Совершить одну итерацию в игре
+ * Game tick
  */
 export function gameTick() {
     return (dispatch, getState) => {
@@ -157,13 +168,13 @@ export function gameTick() {
             default:
         }
 
-        // Проверяем если врезались
+        // Check collision
         if (checkCrash(target, cells)) {
             const { cells, snakeCells } = getInitCellPositions();
 
             const lives = game.get('lives');
             if (lives > 1) {
-                // Уменьшаем жизни и продолжаем
+                // Decrease lives and continue
                 game = game
                     .set('snakeCells', snakeCells)
                     .set('cells', cells)
@@ -180,19 +191,19 @@ export function gameTick() {
             });
         }
 
-        // Проверяем если съели фрукт
+        // Check if apple has been eaten
         const fruitEaten = cells.getIn(target) === CELL_TYPES.FRUIT;
 
         snakeCells = snakeCells.unshift(new Immutable.List(target));
         cells = cells.setIn(target, CELL_TYPES.SNAKE);
 
-        // Если не был съеден фрукт - убираем последнюю клетку змеи
+        // If apple has been eaten  - remove last snake's cell
         if (fruitEaten) {
-            // Рисуем новый фрукт
+            // Draw a new apple
             const fruitPosition = getRandomFruitPosition(cells);
             cells = cells.setIn(fruitPosition, CELL_TYPES.FRUIT);
 
-            // Плюсуем очки
+            // Increase score
             game = game.set('score', score + 10);
 
             if (nextLevelCountdown > 1) {
@@ -202,7 +213,7 @@ export function gameTick() {
                 game = game.set('level', level + 1);
             }
         } else {
-            // Убираем последнюю клетку
+            // Remove last cell
             const endPosition = snakeCells.get(snakeCells.size - 1).toJS();
             snakeCells = snakeCells.pop();
             cells = cells.setIn(endPosition, CELL_TYPES.BLANK);
@@ -218,7 +229,7 @@ export function gameTick() {
 }
 
 /**
- * Выставить направление движения (с проверкой возможности туда двигаться)
+ * Set move direction (with testing ability to move there)
  * @param direction
  * @returns {Function}
  */

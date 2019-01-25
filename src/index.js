@@ -5,10 +5,10 @@ import Root from './components/Root/Root';
 import './styles/index.scss';
 import * as serviceWorker from './serviceWorker';
 
-// Инициализирует redux-store
+// Init redux-store
 const store = configureStore();
 
-// Монтируем React контейнер на страницу
+// Mount React container on page
 const target = document.querySelector('#root');
 ReactDOM.render(<Root store={store} />, target);
 
